@@ -1,0 +1,15 @@
+  .idea
+.vscode
+__pycache__
+debug.log
+venv
+.env
+download
+downloads
+output/
+temp
+.idea/
+
+req.txt
+/test/features/examples/test.feature
+/test/steps/test.py
