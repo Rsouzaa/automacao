@@ -1,0 +1,305 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row results">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">{{_('Features')}}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div class="flex-wrapper center-donut">
+                                <div class="single-chart">
+                                    <svg viewBox="0 0 42 42" class="donut">
+                                        <circle class="donut-hole" cx="21" cy="21" r="15.91549430918954"
+                                                fill="#fff"></circle>
+                                        <circle class="donut-ring" cx="21" cy="21" r="15.91549430918954"
+                                                fill="transparent" stroke="#d2d3d4" stroke-width="6.8"></circle>
+                                        <circle class="donut-segment"
+                                                data-per="{{global_data.results.features_passed_percent}}" cx="21"
+                                                cy="21" r="15.91549430918954" fill="transparent" stroke="#21c576"
+                                                stroke-width="6.8" stroke-dasharray="0 0"
+                                                stroke-dashoffset="0"></circle>
+                                        <circle class="donut-segment"
+                                                data-per="{{global_data.results.features_failed_percent}}" cx="21"
+                                                cy="21" r="15.91549430918954" fill="transparent" stroke="#ed1919"
+                                                stroke-width="6.8" stroke-dasharray="0 0"
+                                                stroke-dashoffset="0"></circle>
+                                        <text x="21" y="24" class="percentage">{{global_data.results.total_features}}
+                                        </text>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 center-table-card">
+                            <p>{{_('Status')}}</p>
+                            <p>
+                                <i class="status-passed-icon"></i>
+                                {{_('Passed')}}
+                            </p>
+                            <p>
+                                <i class="status-failed-icon"></i>
+                                {{_('Failed')}}
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>{{_('Progress')}}</p>
+                            <p>{{global_data.results.features_passed_percent}} %</p>
+                            <p>{{global_data.results.features_failed_percent}} %</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">{{_('Scenarios')}}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div class="flex-wrapper center-donut">
+                                <div class="single-chart">
+                                    <svg viewBox="0 0 42 42" class="donut">
+                                        <circle class="donut-hole" cx="21" cy="21" r="15.91549430918954"
+                                                fill="#fff"></circle>
+                                        <circle class="donut-ring" cx="21" cy="21" r="15.91549430918954"
+                                                fill="transparent" stroke="#d2d3d4" stroke-width="6.8"></circle>
+                                        <circle class="donut-segment"
+                                                data-per="{{global_data.results.scenarios_passed_percent}}" cx="21"
+                                                cy="21" r="15.91549430918954" fill="transparent" stroke="#21c576"
+                                                stroke-width="6.8" stroke-dasharray="0 0"
+                                                stroke-dashoffset="0"></circle>
+                                        <circle class="donut-segment"
+                                                data-per="{{global_data.results.scenarios_failed_percent}}" cx="21"
+                                                cy="21" r="15.91549430918954" fill="transparent" stroke="#ed1919"
+                                                stroke-width="6.8" stroke-dasharray="0 0"
+                                                stroke-dashoffset="0"></circle>
+                                        <text x="21" y="24" class="percentage">{{global_data.results.total_scenarios}}
+                                        </text>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 center-table-card">
+                            <p>{{_('Status')}}</p>
+                            <p>
+                                <i class="status-passed-icon"></i>
+                                {{_('Passed')}}
+                            </p>
+                            <p>
+                                <i class="status-failed-icon"></i>
+                                {{_('Failed')}}
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>{{_('Progress')}}</p>
+                            <p>{{global_data.results.scenarios_passed_percent}} %</p>
+                            <p>{{global_data.results.scenarios_failed_percent}} %</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">{{_('Run Info')}}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr>
+                                <td>{{_('Total Features')}}:</td>
+                                <td>{{global_data.results.total_features}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Total Scenarios')}}:</td>
+                                <td>{{global_data.results.total_scenarios}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Scenarios passed')}}:</td>
+                                <td>{{global_data.results.passed_scenarios}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Scenarios failed')}}:</td>
+                                <td>{{global_data.results.failed_scenarios}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Total Steps')}}:</td>
+                                <td>{{global_data.results.total_steps}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Steps passed')}}:</td>
+                                <td>{{global_data.results.steps_passed}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Steps failed')}}:</td>
+                                <td>{{global_data.results.steps_failed}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Execution start time')}}:</td>
+                                <td>{{global_data.results.start_time|format_datetime}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Execution end time')}}:</td>
+                                <td>{{global_data.results.end_time|format_datetime}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Environment')}}:</td>
+                                <td>{{global_data.environment}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Version')}}:</td>
+                                <td>{{global_data.version}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Application')}}:</td>
+                                <td>{{global_data.application}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Business area')}}:</td>
+                                <td>{{global_data.business_area}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Entity')}}:</td>
+                                <td>{{global_data.entity}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Executed by user')}}:</td>
+                                <td>{{global_data.user_code}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row overview">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">{{_('Features Overview')}}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th>
+                                    {{_('Feature name')}}
+                                </th>
+                                <th>
+                                    {{_('Tags')}}
+                                </th>
+                                <th>
+                                    {{_('Status')}}
+                                </th>
+                                <th>
+                                    OS
+                                </th>
+                                <th>
+                                    {{_('Driver')}}
+                                </th>
+                                <th>
+                                    {{_('Total Scenarios')}}
+                                </th>
+                                <th>
+                                    {{_('Scenarios passed')}}
+                                </th>
+                                <th>
+                                    {{_('Scenarios failed')}}
+                                </th>
+                                <th>
+                                    {{_('Total Steps')}}
+                                </th>
+                                <th>
+                                    {{_('Steps Passed')}}
+                                </th>
+                                <th>
+                                    {{_('Steps Failed')}}
+                                </th>
+                                <th>
+                                    {{_('Steps Skipped')}}
+                                </th>
+                                <th>
+                                    {{_('Duration')}}
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for feature in features %}
+                            <tr>
+                                <td><a href="./feature_{{feature.name|get_short_name}}.html">{{feature.name}}</a></td>
+                                <td>
+                                    <pre>{{feature.tags|join('\n')}}</pre>
+                                </td>
+                                <td class="text-center">
+                                    <i class="status-{{feature.status}}-icon"></i>
+                                </td>
+                                <td>{{feature.operating_system}}</td>
+                                <td>{{feature.driver}}</td>
+                                <td>{{feature.total_scenarios}}</td>
+                                <td>{{feature.passed_scenarios}}</td>
+                                <td>{{feature.failed_scenarios}}</td>
+                                <td>{{feature.total_steps}}</td>
+                                <td>{{feature.steps_passed}}</td>
+                                <td>{{feature.steps_failed}}</td>
+                                <td>{{feature.steps_skipped}}</td>
+                                <td>{{feature.duration|get_duration}}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!--Donuts js -->
+<script type="text/javascript">
+    const donuts = $(".single-chart .donut");
+
+    for (let i = 0; i < donuts.length; i++) {
+        let segments = $(donuts[i]).find(".donut-segment");
+        // First segment's offset
+        let firstSegmentOffset = parseFloat($(segments[0]).attr("stroke-dashoffset"));
+
+        // Total of all preceding segments length
+        // For use in stroke-dashoffset calculation
+        let preSegmentsTotalLength = 0;
+        let percentOld = 0;
+
+        for (let j = 0; j < segments.length; j++) {
+            // percentage occupied by current segment
+            let percent = $(segments[j]).data("per");
+
+            // current segments stroke-dasharray calculation
+            let strokeDasharray = `${percent} ${100 - percent}`;
+
+            // setting stroke-dasharray for all segments
+            $(segments[j]).css("stroke-dasharray", strokeDasharray);
+            if (j != 0) {
+                // current segments stroke-dashoffset calculation
+                let strokeDashoffset = `${preSegmentsTotalLength - percentOld}`;
+
+                // setting stroke-dasharray for all segments
+                $(segments[j]).css("stroke-dashoffset", strokeDashoffset);
+
+                // Updating total of all preceding segments length
+                preSegmentsTotalLength = strokeDashoffset;
+            }
+            percentOld = percent;
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,585 @@
+{% extends "base_template.html" %}
+{% block extra_head %}
+<!--FancyBox css -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css">
+<!-- Fancybox js -->
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h5><a href="feature_{{feature_name|get_short_name}}.html">{{_('Return to feature')}} {{feature_name}}</a>
+            </h5>
+        </div>
+    </div>
+    <div class="row results">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">{{_('Steps')}}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="flex-wrapper center-donut">
+                                <div class="single-chart">
+                                    <svg viewBox="0 0 42 42" class="donut">
+                                        <circle class="donut-hole" cx="21" cy="21" r="15.91549430918954"
+                                                fill="#fff"></circle>
+                                        <circle class="donut-ring" cx="21" cy="21" r="15.91549430918954"
+                                                fill="transparent" stroke="#d2d3d4" stroke-width="6.8"></circle>
+
+                                        <circle class="donut-segment" data-per="{{scenario.steps_passed_percent}}"
+                                                cx="21" cy="21" r="15.91549430918954" fill="transparent"
+                                                stroke="#21c576" stroke-width="6.8" stroke-dasharray="0 0"
+                                                stroke-dashoffset="0"></circle>
+                                        <circle class="donut-segment" data-per="{{scenario.steps_failed_percent}}"
+                                                cx="21" cy="21" r="15.91549430918954" fill="transparent"
+                                                stroke="#ed1919" stroke-width="6.8" stroke-dasharray="0 0"
+                                                stroke-dashoffset="0"></circle>
+                                        <circle class="donut-segment" data-per="{{scenario.steps_skipped_percent}}"
+                                                cx="21" cy="21" r="15.91549430918954" fill="transparent"
+                                                stroke="#7ca1e3" stroke-width="6.8" stroke-dasharray="0 0"
+                                                stroke-dashoffset="0"></circle>
+                                        <text x="21" y="24" class="percentage">{{scenario.total_steps}}</text>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <p>{{_('Status')}}</p>
+                            <p>
+                                <i class="status-passed-icon"></i>
+                                {{_('Passed')}}
+                            </p>
+                            <p>
+                                <i class="status-failed-icon"></i>
+                                {{_('Failed')}}
+                            </p>
+                            <p>
+                                <i class="status-skipped-icon"></i>
+                                {{_('Skipped')}}
+                            </p>
+                        </div>
+                        <div class="col-md-2">
+                            <p>{{_('Progress')}}</p>
+                            <p>{{scenario.steps_passed_percent}} %</p>
+                            <p>{{scenario.steps_failed_percent}} %</p>
+                            <p>{{scenario.steps_skipped_percent}} %</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">{{_('Run Info')}}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr>
+                                <td>{{_('Description')}}:</td>
+                                <td>{{scenario.description|join(" ")|d('-')}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Total Steps')}}:</td>
+                                <td>{{scenario.total_steps}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Passed Steps')}}:</td>
+                                <td>{{scenario.steps_passed}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Failed Steps')}}:</td>
+                                <td>{{scenario.steps_failed}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Skipped Steps')}}</td>
+                                <td>{{scenario.steps_skipped}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Execution start time')}}:</td>
+                                <td>{{scenario.start_time|format_datetime}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Execution end time')}}:</td>
+                                <td>{{scenario.end_time|format_datetime}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Duration')}}:</td>
+                                <td>{{scenario.duration|get_duration}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Environment')}}:</td>
+                                <td>{{global_data.environment}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Version')}}:</td>
+                                <td>{{global_data.version}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Application')}}:</td>
+                                <td>{{global_data.application}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Business area')}}:</td>
+                                <td>{{global_data.business_area}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Entity')}}:</td>
+                                <td>{{global_data.entity}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Executed by user')}}:</td>
+                                <td>{{global_data.user_code}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row overview">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">{{_('Steps Overview')}}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th>{{_('Step name')}}</th>
+                                <th>{{_('Status')}}</th>
+                                <th>{{_('Start')}}</th>
+                                <th>{{_('Finish')}}</th>
+                                <th>{{_('Duration')}}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for step in scenario.steps %}
+                            <tr>
+                                <td><a href="#step-{{loop.index}}">{{loop.index}} - {{step.name}}</a></td>
+                                <td class="text-center">
+                                    <i class="status-{{step.result.status if step.result else 'skipped'}}-icon"></i>
+                                </td>
+                                <td>{{step.start_time|d(None)|format_datetime}}</td>
+                                <td>{{step.end_time|d(None)|format_datetime}}</td>
+                                <td>
+                                    {{step.result.duration|get_duration if step.result else '-'}}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row tests-results">
+        <div class="col-md-12">
+            {% for step in scenario.steps %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title" id="step-{{loop.index}}">
+                        Step.{{loop.index}} - {{step.keyword}} {{step.name}}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive step-data">
+                        <table class="table">
+                            <tr>
+                                <td>{{_('Status')}}:</td>
+                                <td class="text-capitalize adjust-text-status-width">
+                                    {% if step.result is defined %}
+                                    <status-{{step.result.status}}>{{step.result.status}}</status-{{step.result.status}}>
+                                    {% else %}
+                                    <status-skipped>skipped</status-skipped>
+                                    {% endif %}
+                                </td>
+                                <td class="font-header">
+                                    {{_('Location')}}:
+                                </td>
+                                <td>
+                                    {{step.location}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Expected result')}}:</td>
+                                <td>{{step.result.expected_result if step.result else '-'}}</td>
+                                <td class="font-header">{{_('Obtained result')}}:</td>
+                                <td>{{step.result.obtained_result if step.result else '-'}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Duration')}}:</td>
+                                <td>{{step.result.duration|get_duration if step.result else '-'}}</td>
+                                <td class="font-header">{{_('Description')}}:</td>
+                                <td>{{step.text}}</td>
+                            </tr>
+                            <!-- get results -->
+                            {% if step.result and step.result.error_message %}
+                            <tr>
+                                <td>{{_('Result')}}:</td>
+                                <td colspan="3">
+                                    <code>
+                                        {{step.result.error_message|d('-')}}
+                                    </code>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            <!-- get results -->
+
+                            <!-- additional text -->
+                            {% if step.additional_text %}
+                            <tr>
+                                <td class="font-header">{{_('Additional text')}}:</td>
+                                <td>
+                                    {% for text in step.additional_text %}
+                                    <p>{{text}}</p>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            {% endif %}
+                            <!-- additional text -->
+
+                            <!-- step table -->
+                            {% if step.table and step.result is defined %}
+                            <td class="col-md-2">
+                                {{_('Step table')}}:
+                            </td>
+                            <td>
+                                <a class="collapse-step-table collapsed" lang="EN-IN" href="#step_table_{{loop.index}}"
+                                   data-toggle="collapse" role="button"
+                                   aria-expanded="false" aria-controls="step_table_{{loop.index}}">
+                                    {{_('Show step table data')}}
+                                </a>
+                            </td>
+                            <tbody class="collapse" id="step_table_{{loop.index}}">
+                            <tr>
+                                {% for header in step.table.headings %}
+                                <th>{{header}}</th>
+                                {% endfor %}
+                            </tr>
+                            {% for row in step.table.rows %}
+                            <tr>
+                                {% for value in row %}
+                                <td>{{value|replace_template_var}}</td>
+                                {% endfor %}
+                                {% endfor %}
+                            </tr>
+                            </tbody>
+                            {% endif %}
+                            <!-- step table -->
+
+                            <!-- step screenshots -->
+                            {% if step.screenshots %}
+                            <tr>
+                                <td></td>
+                                <td class="screenshots-grid">
+                                    {% for screenshot in step.screenshots %}
+                                    <div class="thumbnail-container">
+                                        <a href="" data-fancybox>
+                                            <img class="img-thumbnail" src="{{screenshot|transform_image_to_webp}}">
+                                        </a>
+                                    </div>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            {% endif %}
+                            <!-- step screenshots -->
+                        </table>
+                        <!-- step api data -->
+                        {% if step.request %}
+                        <table class="table">
+                            <tr>
+                                <td class="col-md-2">{{_('Request info')}}:</td>
+                                <td>
+                                    <a class="collapse-request collapsed" data-toggle="collapse"
+                                       href="#request_{{loop.index}}" role="button" aria-expanded="false"
+                                       aria-controls="request_{{loop.index}}">
+                                        {{_('Show request data')}}
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="collapse" id="request_{{loop.index}}">
+                            <p>{{_('Endpoint')}}: {{step.request.url}}</p>
+                            <p>{{_('Params')}}:
+                            <pre>{{step.request.params|d(_('No params'))|jsonpretty}}</pre>
+                            </p>
+                            <p>{{_('Headers')}}:
+                            <pre>{{step.request.headers|d(_('No headers'))|jsonpretty}}</pre>
+                            </p>
+                            <p>{{_('Body')}}:
+                            <pre>{{step.request.body|d(_('No body'))}}</pre>
+                            </p>
+                        </div>
+
+                        <table class="table">
+                            <tr>
+                                <td class="col-md-2">
+                                    {{_('Response info')}}:
+                                </td>
+                                <td>
+                                    <a class="collapse-response collapsed" data-toggle="collapse"
+                                       href="#response_{{loop.index}}" role="button" aria-expanded="false"
+                                       aria-controls="response_{{loop.index}}">
+                                        {{_('Show response data')}}
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="collapse" id="response_{{loop.index}}">
+                            <p>{{_('Headers')}}:
+                            <pre>{{step.response_headers|d(_('No headers'))|parse_content_type}}</pre>
+                            </p>
+                            <p>{{_('Body')}}:
+                            <pre>{{step.response_content|d(_('No content'))|parse_content_type}}</pre>
+                            </p>
+                        </div>
+                        {% endif %}
+                        <!-- step api data -->
+
+                        <!-- jsons -->
+
+                        {% if step.jsons %}
+                        {% set evidence_count = loop.index %}
+                        {% for evidence in step.jsons %}
+                        <table class="table">
+                            <tr>
+                                <td class="col-md-2">{{evidence.title}}:</td>
+                                <td>
+                                    <a class="collapse-evidence-extra collapsed" data-toggle="collapse"
+                                       href="#evidence_extra_{{loop.index+evidence_count}}" role="button"
+                                       aria-expanded="false"
+                                       aria-controls="response_{{loop.index+evidence_count}}">
+                                        {{_('Show evidence extra info')}}
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="collapse" id="evidence_extra_{{loop.index+evidence_count}}">
+                            <pre>{{evidence|parse_content_type}}</pre>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        <!-- jsons -->
+
+                        <!-- unit tables -->
+                        {% if step.unit_tables %}
+                        {% set step_count = loop.index %}
+                        {% for evidence in step.unit_tables %}
+                        {% set evidence_count = loop.index %}
+                        <table class="table">
+                            <tr>
+                                <td class="col-md-2">
+                                    {{evidence.title}}:
+                                </td>
+                                <td>
+                                    <a class="collapse-unit-table collapsed" lang="EN-IN"
+                                       href="#unit_table_{{step_count}}_{{evidence_count}}" data-toggle="collapse"
+                                       role="button"
+                                       aria-expanded="false"
+                                       aria-controls="unit_table_{{step_count}}_{{evidence_count}}">
+                                        {{_('Show info')}}
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="collapse" id="unit_table_{{step_count}}_{{evidence_count}}">
+                            <table class="table">
+                                <tbody>
+                                {% for key, value in evidence.items() %}
+                                {% if key != 'title' and value %}
+                                <tr>
+                                    <td class="col-md-2">{{key|replace('_', ' ')}}:</td>
+                                    <td>{{value}}</td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        <!-- unit tables -->
+
+                        <!-- api info -->
+                        {% if step.api_info %}
+                        <table class="table">
+                            <tr>
+                                <td class="col-md-2">
+                                    {{_('Api evidence info')}}:
+                                </td>
+                                <td>
+                                    <a class="collapse-info collapsed" lang="EN-IN" href="#api_info_{{loop.index}}"
+                                       data-toggle="collapse" role="button"
+                                       aria-expanded="false" aria-controls="api_info_{{loop.index}}">
+                                        {{_('Show Api evidence info')}}
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="collapse" id="api_info_{{loop.index}}">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td class="col-md-2">Url:</td>
+                                    <td>{{step.api_info.url}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-2">Method:</td>
+                                    <td>{{step.api_info.method}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-2">Reason:</td>
+                                    <td>{{step.api_info.reason}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-2">Status Code:</td>
+                                    <td>{{step.api_info.status_code}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endif %}
+                        <!-- api info -->
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<button class="btn-scrolltop" id="btn_scrolltop">
+    <i class="arrow-up"></i>
+</button>
+{% endblock %}
+
+{% block extra_js %}
+<!--Collapse Table -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+<!--Go up -->
+<script>
+    const btn_scrolltop = document.getElementById("btn_scrolltop")
+    btn_scrolltop.addEventListener('click', () => {
+        window.scrollTo(0, 0)
+    })
+
+    window.onscroll = () => {
+        add_btn_scrolltop()
+    }
+
+    const add_btn_scrolltop = () => {
+        if (window.scrollY < 300) {
+            btn_scrolltop.classList.remove("btn-scrolltop-on")
+        } else {
+            btn_scrolltop.classList.add("btn-scrolltop-on")
+        }
+    }
+
+</script>
+<!--Donuts js -->
+<script type="text/javascript">
+    const donuts = $(".single-chart .donut");
+
+    for (let i = 0; i < donuts.length; i++) {
+        let segments = $(donuts[i]).find(".donut-segment");
+        // First segment's offset
+        let firstSegmentOffset = parseFloat($(segments[0]).attr("stroke-dashoffset"));
+
+        // Total of all preceding segments length
+        // For use in stroke-dashoffset calculation
+        let preSegmentsTotalLength = 0;
+        let percentOld = 0;
+
+        for (let j = 0; j < segments.length; j++) {
+            // percentage occupied by current segment
+            let percent = $(segments[j]).data("per");
+
+            // current segments stroke-dasharray calculation
+            let strokeDasharray = `${percent} ${100 - percent}`;
+
+            // setting stroke-dasharray for all segments
+            $(segments[j]).css("stroke-dasharray", strokeDasharray);
+            if (j != 0) {
+                // current segments stroke-dashoffset calculation
+                let strokeDashoffset = `${preSegmentsTotalLength - percentOld}`;
+
+                // setting stroke-dasharray for all segments
+                $(segments[j]).css("stroke-dashoffset", strokeDashoffset);
+
+                // Updating total of all preceding segments length
+                preSegmentsTotalLength = strokeDashoffset;
+            }
+            percentOld = percent;
+        }
+    }
+
+
+</script>
+<!-- Collapses API -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".collapse-request").click(function (e) {
+            if ($(e.target).hasClass("collapsed")) {
+                $(e.target).text("{{_('Hide request data')}}");
+            } else {
+                $(e.target).text("{{_('Show request data')}}");
+            }
+        });
+        $(".collapse-response").click(function (e) {
+            if ($(e.target).hasClass("collapsed")) {
+                $(e.target).text("{{_('Hide response data')}}");
+            } else {
+                $(e.target).text("{{_('Show response data')}}");
+            }
+        });
+        $(".collapse-evidence-extra").click(function (e) {
+            if ($(e.target).hasClass("collapsed")) {
+                $(e.target).text("{{_('Hide evidence extra json')}}");
+            } else {
+                $(e.target).text("{{_('Show evidence extra json')}}");
+            }
+        });
+        $(".collapse-info").click(function (e) {
+            if ($(e.target).hasClass("collapsed")) {
+                $(e.target).text("{{_('Hide Api evidence info')}}");
+            } else {
+                $(e.target).text("{{_('Show Api evidence info')}}");
+            }
+        });
+        $(".collapse-unit-table").click(function (e) {
+            if ($(e.target).hasClass("collapsed")) {
+                $(e.target).text("{{_('Hide info')}}");
+            } else {
+                $(e.target).text("{{_('Show info')}}");
+            }
+        });
+        $(".collapse-step-table").click(function (e) {
+            if ($(e.target).hasClass("collapsed")) {
+                $(e.target).text("{{_('Hide step table data')}}");
+            } else {
+                $(e.target).text("{{_('Show step table data')}}");
+            }
+        });
+
+    });
+
+</script>
+<!-- Custom Fancybox js -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".img-thumbnail").each((index, element) => {
+            $(element).parent().attr("href", $(element).attr("src"))
+        });
+    });
+</script>
+{% endblock %}

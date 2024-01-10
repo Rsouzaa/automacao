@@ -1,0 +1,45 @@
+{
+  "users":
+    {
+      "userType1": {
+        "username": "Operador",
+        "password": "123456"
+      },
+      "userType2": {
+        "username": "Backoffice Interno(CRIAR)",
+        "password": "123456"
+      },
+      "userType3": {
+        "username": "Backoffice Externo",
+        "password": "123456"
+      },
+      "userType4":{
+        "username": "Inteligencia(CRIAR)",
+        "password": "123456"
+      },
+      "userType5":{
+        "username": "Supervisor",
+        "password": "123456"
+      },
+      "userType6":{
+        "username": "Coordenador",
+        "password": "123456"
+      },
+      "userType7":{
+        "username": "Suporte Avançado",
+        "password": "123456"
+      },
+      "userType8":{
+        "username": "Suporte Técnico",
+        "password": "123456"
+      },
+      "userType9":{
+        "username": "Reserva(CRIAR)",
+        "password": "123456"
+      },
+      "userType10":{
+        "username": "Administrador Master",
+        "password": "123456"
+      }
+    }
+}
