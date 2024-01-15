@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 use_step_matcher("re")
 
 
-@step("I accessed the group")
+@step("I accessed the operation group")
 def test(context):
 
     # retract management
@@ -34,42 +34,36 @@ def test(context):
 
     context.utilities.wait_until_element_visible(element, 20)
 
-    # click on agency
-    btn__login = Button(By.XPATH, '//*[@id="menu_0_0"]/ul/li[1]/div/a/span')
+    # click on operação
+    btn__login = Button(By.XPATH, '//*[@id="menu_0_0"]/ul/li[2]/div/a/span')
     btn__login.wait_until_clickable()
     btn__login.click()
-
     context.utilities.wait_until_element_visible(element, 20)
 
-
-@step("add name to group")
-def test(context):
     # add group
-    btn__login = Button(By.CLASS_NAME, 'iconsminds-add')
+    btn__login = Button(By.CLASS_NAME, 'float-right')
     btn__login.wait_until_clickable()
     btn__login.click()
+    context.utilities.wait_until_element_visible(element, 20)
 
-    context.driver.find_element(By.CLASS_NAME, 'se_group_name').send_keys("Analista")
+    context.driver.find_element(By.CLASS_NAME, 'se_group_name').send_keys("Porta Automatica")
+    context.utilities.wait_until_element_visible(element, 20)
 
-    context.driver.find_element(By.CLASS_NAME, 'se_user').send_keys("X218090")
+    context.driver.find_element(By.CLASS_NAME, 'se_user').send_keys("X151110")
     context.driver.find_element(By.CLASS_NAME, 'se_user').send_keys(Keys.ENTER)
+    context.utilities.wait_until_element_visible(element, 20)
 
-    context.driver.find_element(By.CLASS_NAME, 'multiselect.se_office').send_keys("003-0001")
-    context.driver.find_element(By.CLASS_NAME, 'multiselect.se_office').send_keys(Keys.ENTER)
+    context.driver.find_element(By.CLASS_NAME, 'se_office_op').send_keys("CARRO FORTE")
+    context.driver.find_element(By.CLASS_NAME, 'se_office_op').send_keys(Keys.ENTER)
+    context.utilities.wait_until_element_visible(element, 20)
 
-    element = Link(By.CSS_SELECTOR, '#app-container > main > div > div > div:nth-child(2) >'
-                                    ' div > div > div > div > div > div > form > div > button')
-    element.wait_until_clickable()
-    element.scroll_element_into_view()
-    element.click()
+    context.driver.find_element(By.CLASS_NAME, 'btn.btn-primary.btn-lg.btn-multiple-state.btn-shadow').click()
+    context.utilities.wait_until_element_visible(element, 20)
 
-    context.utilities.wait_until_element_visible(element, 30)
-
-
-@step('a new user group will be created')
+@step("link a name to the group")
 def test(context):
-    context.driver.find_element(By.CLASS_NAME, 'se_filterInput.form-control').send_keys("Analista")
-    context.driver.find_element(By.CLASS_NAME, 'se_filterInput.form-control').send_keys(Keys.ENTER)
+    context.driver.find_element(By.CLASS_NAME, 'se_filterInput').send_keys("Porta Automatica")
+    context.driver.find_element(By.CLASS_NAME, 'se_filterInput').send_keys(Keys.ENTER)
 
     btn__login = Button(By.CLASS_NAME, 'iconsminds-file-edit')
     btn__login.wait_until_clickable()
@@ -77,7 +71,7 @@ def test(context):
 
     context.driver.find_element(By.CLASS_NAME, 'se_group_name').clear()
 
-    context.driver.find_element(By.CLASS_NAME, 'se_group_name').send_keys("Geração digital")
+    context.driver.find_element(By.CLASS_NAME, 'se_group_name').send_keys("Automatica porta")
 
     # Click no Botão de salvar operação
     element = Link(By.CSS_SELECTOR, '#app-container > main > div > div > div:nth-child(2) > div > div >'
@@ -87,7 +81,9 @@ def test(context):
     element.scroll_element_into_view()
     element.click()
 
-    # deletar grupo de agencia
+
+@step('a new operation group will be created')
+def test(context):
     element = Link(By.CLASS_NAME, 'se_filterInput')
     element.wait_until_clickable()
     element.scroll_element_into_view()
@@ -95,11 +91,11 @@ def test(context):
     context.utilities.wait_until_element_visible(element, 20)
 
     # pesquisar operação
-    context.driver.find_element(By.CLASS_NAME, 'se_filterInput').send_keys("Geração digital")
+    context.driver.find_element(By.CLASS_NAME, 'se_filterInput').send_keys("Automatica porta")
 
     context.utilities.wait_until_element_visible(element, 20)
     context.driver.find_element(By.CLASS_NAME, 'se_filterInput').send_keys(Keys.ENTER)
-
+    
     # deletar grupo
     context.driver.find_element(By.CLASS_NAME, 'iconsminds-close').click()
     context.utilities.wait_until_element_visible(element, 60)
