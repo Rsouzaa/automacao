@@ -35,50 +35,68 @@ def test(context):
     element.click()
     context.utilities.wait_until_element_visible(element, 200)
 
+    # add group
+    btn__login = Button(By.XPATH, '//*[@id="app-container"]/main/div/div/div[1]/div/a')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+    context.utilities.wait_until_element_visible(element, 20)
+
+    context.driver.find_element(By.CLASS_NAME, 'se_full_name').send_keys("Usuario teste")
+    context.utilities.wait_until_element_visible(element, 20)
+
+    context.driver.find_element(By.CLASS_NAME, 'se_username').send_keys("X236156")
+    context.driver.find_element(By.CLASS_NAME, 'se_username').send_keys(Keys.ENTER)
+    context.utilities.wait_until_element_visible(element, 20)
+
+    context.driver.find_element(By.CLASS_NAME, 'se_password').send_keys("123456")
+    context.driver.find_element(By.CLASS_NAME, 'se_password').send_keys(Keys.ENTER)
+    context.utilities.wait_until_element_visible(element, 20)
+
+    context.driver.find_element(By.CLASS_NAME, 'se_repeat_password').send_keys("123456")
+    context.driver.find_element(By.CLASS_NAME, 'se_repeat_password').send_keys(Keys.ENTER)
+    context.utilities.wait_until_element_visible(element, 20)
+
 
 @step("new user is search")
 def test(context):
     # localizar usuario
-    context.driver.find_element(By.XPATH, '//*[@id="filterInput"]').send_keys("TestSoftware")
+    context.driver.find_element(By.XPATH, '//*[@id="filterInput"]').send_keys("Usuario teste")
     context.driver.find_element(By.XPATH, '//*[@id="filterInput"]').send_keys(Keys.ENTER)
 
-    # deletar usuario
-    context.driver.find_element(By.CLASS_NAME, 'iconsminds-close').click()
-    context.driver.find_element(By.CLASS_NAME, 'btn.btn-danger.btn-sm').click()
+    btn__login = Button(By.CLASS_NAME, 'iconsminds-file-edit')
+    btn__login.wait_until_clickable()
+    btn__login.click()
 
-    # Adicionar novo usuario
-    context.driver.find_element(By.XPATH, '//*[@id="app-container"]/main/div/div/div[1]/div/a').click()
+    context.driver.find_element(By.CLASS_NAME, 'se_full_name').clear()
 
-    # nome completo
-    context.driver.find_element(By.CLASS_NAME, 'se_full_name').send_keys("Test")
-    context.driver.find_element(By.CLASS_NAME, 'se_full_name').send_keys(Keys.ENTER)
+    context.driver.find_element(By.CLASS_NAME, 'se_full_name').send_keys("Usuario editado")
 
-    # matricula
-    context.driver.find_element(By.CLASS_NAME, 'se_username').send_keys("X236156")
-    context.driver.find_element(By.CLASS_NAME, 'se_username').send_keys(Keys.ENTER)
-
-    # senha
-    context.driver.find_element(By.CLASS_NAME, 'se_password').send_keys("123456")
-    context.driver.find_element(By.CLASS_NAME, 'se_password').send_keys(Keys.ENTER)
-
-    # repetir senha
-    context.driver.find_element(By.CLASS_NAME, 'se_repeat_password').send_keys("123456")
-    context.driver.find_element(By.CLASS_NAME, 'se_repeat_password').send_keys(Keys.ENTER)
+    # Click no Botão de salvar operação
+    element = Link(By.CSS_SELECTOR, '#app-container > main > div > div > div:nth-child(2) > div > div >'
+                                    ' div > div > div > div > form >'
+                                    ' div.d-flex.justify-content-end.align-items-center > button')
+    element.wait_until_clickable()
+    element.scroll_element_into_view()
+    element.click()
 
 
 @step("it will be easier to delete or edit")
 def test(context):
-    # localizar usuario
-    context.driver.find_element(By.XPATH, '//*[@id="filterInput"]').click()
-    context.driver.find_element(By.XPATH, '//*[@id="filterInput"]').send_keys("Test")
+    # pesquisar operação
+    context.driver.find_element(By.XPATH, '//*[@id="filterInput"]').send_keys("Usuario editado")
     context.driver.find_element(By.XPATH, '//*[@id="filterInput"]').send_keys(Keys.ENTER)
 
-    # editar usuario
-    context.driver.find_element(By.CLASS_NAME, 'iconsminds-file-edit').click()
+    # deletar usuario
+    # element = Link(By.CLASS_NAME, 'iconsminds-close')
+    # element.wait_until_clickable()
+    # element.scroll_element_into_view()
+    # element.click()
+    # context.utilities.wait_until_element_visible(element, 220)
+    context.driver.find_element(By.CLASS_NAME, 'iconsminds-close').click()
 
-    # edição usuario
-    context.driver.find_element(By.CLASS_NAME, 'se_full_name').send_keys("Software")
-    context.driver.find_element(By.CLASS_NAME, 'se_full_name').send_keys(Keys.ENTER)
-
-    # salvar
-    context.driver.find_element(By.CLASS_NAME, 'btn.btn-primary.btn-lg.btn-multiple-state.btn-shadow').click()
+    # deletar usuario
+    element = Link(By.CLASS_NAME, 'btn.btn-danger.btn-sm')
+    element.wait_until_clickable()
+    element.scroll_element_into_view()
+    element.click()
+    context.utilities.wait_until_element_visible(element, 120)
