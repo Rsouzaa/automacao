@@ -149,5 +149,8 @@ def test(context):
     context.utilities.wait_until_element_visible(element, 20)
 
     # Botão para deletar loja
-    context.driver.find_element(By.CLASS_NAME, 'btn-danger').click()
-    context.utilities.wait_until_element_visible(element, 40)
+    element = Link(By.CLASS_NAME, 'btn.btn-danger.btn-sm')
+    element.wait_until_clickable()
+    element.scroll_element_into_view()
+    element.click()
+    context.utilities.wait_until_element_visible(element, 120)
