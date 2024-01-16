@@ -35,7 +35,6 @@ def test(context):
     element.wait_until_clickable()
     element.scroll_element_into_view()
     element.click()
-    # context.utilities.wait_until_element_visible(element, 50)
 
 
 @step("the user searches the unit")
@@ -103,19 +102,6 @@ def test(context):
     context.driver.find_element(By.CLASS_NAME, 'se_portage').send_keys("A")
     context.driver.find_element(By.CLASS_NAME, 'se_portage').send_keys(Keys.ENTER)
 
-    # context.driver.find_element(By.CLASS_NAME, 'se_password').send_keys("RADAR")
-    # context.driver.find_element(By.CLASS_NAME, 'se_password').send_keys(Keys.ENTER)
-
-    # context.driver.find_element(By.CLASS_NAME, 'se_password_check').send_keys("GERACAO DIGITAL")
-    # context.driver.find_element(By.CLASS_NAME, 'se_password_check').send_keys(Keys.ENTER)
-
-    # element = Link(By.CSS_SELECTOR, '#app-container > main > div > div > div:nth-child(2) >'
-    #                                ' div > div > div > div > div > div > form >'
-    #                                ' div.d-flex.justify-content-end.align-items-center > button')
-    # element.wait_until_clickable()
-    # element.scroll_element_into_view()
-    # element.click()
-    # context.utilities.wait_until_element_visible(element, 60)
 
 @step("it will be easier to delete the unit")
 def test(context):
@@ -130,7 +116,7 @@ def test(context):
 
     context.driver.find_element(By.CLASS_NAME, 'se_regional').send_keys("GERACAO Radar")
 
-    # Click no Botão de salvar operação
+    # Click no Botão de salvar
     element = Link(By.CSS_SELECTOR, '#app-container > main > div > div > div:nth-child(2) > div > div >'
                                     ' div > div > div > div > form >'
                                     ' div.d-flex.justify-content-end.align-items-center > button')
