@@ -234,6 +234,46 @@ def test(context):
     context.driver.find_element(By.CLASS_NAME, 'form-control').click()
 
     # salvar operacao
+    btn__login = Button(By.CLASS_NAME, 'btn btn-primary btn-lg btn-multiple-state btn-shadow')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    # desativar operação
+    btn__login = Button(By.CLASS_NAME, 'btn.btn-light.se_iconsmind_CARRO.FORTE')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    btn__login = Button(By.CLASS_NAME, 'btn.btn-danger.btn-sm')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    # alarme não reconhecido
+    context.driver.find_element(By.CLASS_NAME, 'form-control').send_keys("ADBSTD")
+    context.driver.find_element(By.CLASS_NAME, 'form-control').send_keys(Keys.ENTER)
+    context.driver.find_element(By.CLASS_NAME, 'form-control').click()
+
+    #
+    # botao abrir
+    btn__login = Button(By.CLASS_NAME, 'simple-icon-arrow-right.pointer')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    # botao fechar
+    btn__login = Button(By.CLASS_NAME, 'simple-icon-arrow-down.pointer')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    # reconhecer evento
+    btn__login = Button(By.CLASS_NAME, 'px-1.pointer.simple-icon-check')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    # mensagens
+    context.driver.find_element(By.CLASS_NAME, 'se_note.form-control').send_keys("TESTE DE ALARME")
+    context.driver.find_element(By.CLASS_NAME, 'se_note.form-control').send_keys(Keys.ENTER)
+    context.driver.find_element(By.CLASS_NAME, 'se_note.form-control').click()
+
+    # salvar mensagen
     btn__login = Button(By.CLASS_NAME, 'btn.se_center.btn-primary.btn-lg.btn-multiple-state.btn-shadow')
     btn__login.wait_until_clickable()
     btn__login.click()
