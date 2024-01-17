@@ -252,7 +252,6 @@ def test(context):
     context.driver.find_element(By.CLASS_NAME, 'form-control').send_keys(Keys.ENTER)
     context.driver.find_element(By.CLASS_NAME, 'form-control').click()
 
-    #
     # botao abrir
     btn__login = Button(By.CLASS_NAME, 'simple-icon-arrow-right.pointer')
     btn__login.wait_until_clickable()
@@ -275,5 +274,25 @@ def test(context):
 
     # salvar mensagen
     btn__login = Button(By.CLASS_NAME, 'btn.se_center.btn-primary.btn-lg.btn-multiple-state.btn-shadow')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    # alarme reconhecidos
+    btn__login = Button(By.CLASS_NAME, 'nav-item.se_recognized')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    # botao abrir
+    btn__login = Button(By.CLASS_NAME, 'simple-icon-arrow-right.pointer')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    # botao fechar
+    btn__login = Button(By.CLASS_NAME, 'simple-icon-arrow-down.pointer')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    # visaão geral
+    btn__login = Button(By.CLASS_NAME, 'nav-item.se_overviewr')
     btn__login.wait_until_clickable()
     btn__login.click()
