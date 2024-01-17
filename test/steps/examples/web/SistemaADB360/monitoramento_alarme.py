@@ -89,8 +89,8 @@ def test(context):
     element.click()
 
     # pesquisar usuario online
-    context.driver.find_element(By.CLASS_NAME, "se_filter_filter").send_keys("operador 1")
-    context.driver.find_element(By.CLASS_NAME, "se_filter_filter").send_keys(Keys.ENTER)
+    context.driver.find_element(By.CLASS_NAME, 'se_filter_filter').send_keys("operador 1")
+    context.driver.find_element(By.CLASS_NAME, 'se_filter_filter').send_keys(Keys.ENTER)
 
     # cancelar
     element = Link(By.CLASS_NAME, 'btn.float-right.btn-primary.btn-sm')
@@ -111,22 +111,129 @@ def test(context):
     element.scroll_element_into_view()
     element.click()
 
-@step("carry out treatment on the monitoring screen")
-def test(context):
-    element = Link(By.CLASS_NAME, "simple-icon-book-open.px-1.pointer")
+    element = Link(By.CLASS_NAME, 'simple-icon-reload.pointer')
+    element.wait_until_clickable()
+    element.scroll_element_into_view()
+    element.click()
+
+    # cancelar
+    element = Link(By.CLASS_NAME, 'btn.float-right.btn-primary.btn-sm')
+    element.wait_until_clickable()
+    element.scroll_element_into_view()
+    element.click()
+
+    # relogio
+    element = Link(By.CLASS_NAME, 'theme-button.se_options')
+    element.wait_until_clickable()
+    element.scroll_element_into_view()
+    element.click()
+    context.utilities.wait_until_element_visible(element, 20)
+
+    element = Link(By.CLASS_NAME, 'btn.se_holidays.btn-primary')
+    element.wait_until_clickable()
+    element.scroll_element_into_view()
+    element.click()
+
+    # cancelar
+    element = Link(By.CLASS_NAME, 'btn.btn-primary.btn-sm')
     element.wait_until_clickable()
     element.scroll_element_into_view()
     element.click()
 
 
+@step("carry out treatment on the monitoring screen")
+def test(context):
+    context.driver.find_element(By.CLASS_NAME, 'se_all_filteer.form-control').send_keys("001-0003")
+    context.driver.find_element(By.CLASS_NAME, 'se_all_filteer.form-control').send_keys(Keys.ENTER)
+    context.driver.find_element(By.CLASS_NAME, 'se_all_filteer.form-control').click()
+
+    # botao abrir
+    btn__login = Button(By.CLASS_NAME, 'simple-icon-arrow-right.pointer')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    # botao fechar
+    btn__login = Button(By.CLASS_NAME, 'simple-icon-arrow-down.pointer')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    # reconhecer evento
+    btn__login = Button(By.CLASS_NAME, 'px-1.pointer.simple-icon-check')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    # mensagens
+    context.driver.find_element(By.CLASS_NAME, 'se_note.form-control').send_keys("TESTE DE ALARME")
+    context.driver.find_element(By.CLASS_NAME, 'se_note.form-control').send_keys(Keys.ENTER)
+    context.driver.find_element(By.CLASS_NAME, 'se_note.form-control').click()
+
+    # salvar mensagen
+    btn__login = Button(By.CLASS_NAME, 'btn.se_center.btn-primary.btn-lg.btn-multiple-state.btn-shadow')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
 @step("all events are being analyzed")
 def test(context):
-    context.btn__menu = Button(By.CLASS_NAME, "btn.btn-tertiary.mt-2.btn-secondary").click()
+    context.driver.find_element(By.CLASS_NAME, 'se_all_filteer.form-control').click()
+    context.driver.find_element(By.CLASS_NAME, 'se_all_filteer.form-control').clear()
 
-    context.btn__menu = Button(By.CLASS_NAME, "btn.float-right.btn-primary.btn-sm").click()
+    context.driver.find_element(By.CLASS_NAME, 'se_all_filteer.form-control').send_keys("000-1754")
+    context.driver.find_element(By.CLASS_NAME, 'se_all_filteer.form-control').send_keys(Keys.ENTER)
+    context.driver.find_element(By.CLASS_NAME, 'se_all_filteer.form-control').click()
 
-    # element = Link(By.CLASS_NAME, "btn.float-right.btn-primary.btn-sm")
-    # element.wait_until_clickable()
-    # element.scroll_element_into_view()
-    # element.click()
-    # context.utilities.wait_until_element_visible(element, 20)
+    # desativar alarme
+    btn__login = Button(By.CLASS_NAME, 'iconsminds-power-3.pointer')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    # observação
+    context.driver.find_element(By.CLASS_NAME, 'se_note.form-control').send_keys("ALARME DESATIVADO")
+    context.driver.find_element(By.CLASS_NAME, 'se_note.form-control').send_keys(Keys.ENTER)
+    context.driver.find_element(By.CLASS_NAME, 'se_note.form-control').click()
+
+    # salvar mensagen
+    btn__login = Button(By.CLASS_NAME, 'btn.se_center.btn-primary.btn-lg.btn-multiple-state.btn-shadow')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    # Acesso detalhes
+    btn__login = Button(By.CLASS_NAME, 'simple-icon-book-open.px-1.pointer')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    # status equipamento
+    context.driver.find_element(By.CLASS_NAME, 'se_filter_filter.form-control').send_keys("AUTODEFESA")
+    context.driver.find_element(By.CLASS_NAME, 'se_filter_filter.form-control').send_keys(Keys.ENTER)
+    context.driver.find_element(By.CLASS_NAME, 'se_filter_filter.form-control').click()
+
+    # todos alarmes
+    btn__login = Button(By.CLASS_NAME, 'nav-item.se_todos')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    context.driver.find_element(By.CLASS_NAME, 'se_filter_filter.form-control').click()
+    context.driver.find_element(By.CLASS_NAME, 'se_filter_filter.form-control').clear()
+
+    # todos alarmes
+    btn__login = Button(By.CLASS_NAME, 'nav-item.se_regras_painel_autodefesa')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    context.driver.find_element(By.CLASS_NAME, 'se_filter_filter.form-control').send_keys("HALL")
+    context.driver.find_element(By.CLASS_NAME, 'se_filter_filter.form-control').send_keys(Keys.ENTER)
+    context.driver.find_element(By.CLASS_NAME, 'se_filter_filter.form-control').click()
+
+    # operacao
+    btn__login = Button(By.CLASS_NAME, 'btn.btn-light.se_iconsmind_CARRO.FORTE')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    #  operacao carro forte
+    context.driver.find_element(By.CLASS_NAME, 'form-control').send_keys(" OPERACAO CARRO FORTE ATIVADO")
+    context.driver.find_element(By.CLASS_NAME, 'form-control').send_keys(Keys.ENTER)
+    context.driver.find_element(By.CLASS_NAME, 'form-control').click()
+
+    # salvar operacao
+    btn__login = Button(By.CLASS_NAME, 'btn.se_center.btn-primary.btn-lg.btn-multiple-state.btn-shadow')
+    btn__login.wait_until_clickable()
+    btn__login.click()
