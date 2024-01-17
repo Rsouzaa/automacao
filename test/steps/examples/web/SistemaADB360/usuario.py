@@ -82,17 +82,14 @@ def test(context):
 
 @step("it will be easier to delete or edit")
 def test(context):
-    # pesquisar operação
-    context.driver.find_element(By.XPATH, '//*[@id="filterInput"]').send_keys("Usuario editado")
+    # pesquisar usuario
+    context.driver.find_element(By.XPATH, '//*[@id="filterInput"]').send_keys("X236156")
     context.driver.find_element(By.XPATH, '//*[@id="filterInput"]').send_keys(Keys.ENTER)
 
-    # deletar usuario
-    # element = Link(By.CLASS_NAME, 'iconsminds-close')
-    # element.wait_until_clickable()
-    # element.scroll_element_into_view()
-    # element.click()
-    # context.utilities.wait_until_element_visible(element, 220)
-    context.driver.find_element(By.CLASS_NAME, 'iconsminds-close').click()
+    btn__login = Button(By.CLASS_NAME, 'iconsminds-close')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+    context.utilities.wait_until_element_visible(btn__login, 120)
 
     # deletar usuario
     element = Link(By.CLASS_NAME, 'btn.btn-danger.btn-sm')
