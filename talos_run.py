@@ -14,7 +14,7 @@ def main():
     if sys.argv[1:]:
         runner.main(' '.join(sys.argv[1:]))
     else:
-        runner.main(make_behave_argv(conf_properties='chrome', tags=['@usuario']))
+        runner.main(make_behave_argv(conf_properties='chrome', tags=['@monitoring']))
 
 
 if __name__ == '__main__':
