@@ -79,3 +79,10 @@ Feature: Profiling
     Given that various types of criticality will be created
     When the user needs to use a new template
     Then then there will be several models available
+
+@operacao_alarme
+  Scenario: alarm operation
+    Given
+    When
+    Then
+
