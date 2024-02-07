@@ -172,6 +172,7 @@ def test(context):
     btn__login.wait_until_clickable()
     btn__login.click()
 
+
 @step("all events are being analyzed")
 def test(context):
     context.driver.find_element(By.CLASS_NAME, 'se_all_filteer.form-control').click()
@@ -234,15 +235,21 @@ def test(context):
     context.driver.find_element(By.CLASS_NAME, 'form-control').click()
 
     # salvar operacao
-    btn__login = Button(By.CLASS_NAME, 'btn btn-primary btn-lg btn-multiple-state btn-shadow')
+    btn__login = Button(By.CLASS_NAME, 'btn.btn-primary.btn-lg.btn-multiple-state.btn-shadow')
+    btn__login.wait_until_clickable()
+    btn__login.click()
+
+    # confirmar salvação
+    btn__login = Button(By.CLASS_NAME, 'btn.btn-danger.btn-sm')
     btn__login.wait_until_clickable()
     btn__login.click()
 
     # desativar operação
-    btn__login = Button(By.CLASS_NAME, 'btn.btn-light.se_iconsmind_CARRO.FORTE')
+    btn__login = Button(By.CLASS_NAME, 'btn.btn-secondary')
     btn__login.wait_until_clickable()
     btn__login.click()
 
+    # confirmar desativação
     btn__login = Button(By.CLASS_NAME, 'btn.btn-danger.btn-sm')
     btn__login.wait_until_clickable()
     btn__login.click()
@@ -296,3 +303,4 @@ def test(context):
     btn__login = Button(By.CLASS_NAME, 'nav-item.se_overviewr')
     btn__login.wait_until_clickable()
     btn__login.click()
+

@@ -41,3 +41,41 @@ Feature: Profiling
     Given that a new user will be created
     When new user is search
     Then it will be easier to delete or edit
+
+
+@grupo_ambiente
+  Scenario: ambient
+    Given that I accessed the environment
+    When click on add environment
+    Then a new environment will be created
+
+
+@multiplos_alarme
+  Scenario: alarm multiple
+    Given that the multiple alarm will be validated
+    When Alarms are clicked
+    Then The information will be edited
+
+@alarmes_desativados
+  Scenario: multiple disabled
+    Given that the alarm has been deactivated
+    When selected by user
+    Then the event will no longer be generated
+
+@feriado
+  Scenario: holiday
+    Given that the holiday
+    When created it will be used
+    Then a trip occurs in the unit
+
+@regra_alarme
+  Scenario: alarm rule
+    Given a new alarm rule will be created
+    When Including the information
+    Then the rule can be used
+
+@criticidade_alarme
+  Scenario: alarm criticality
+    Given that various types of criticality will be created
+    When the user needs to use a new template
+    Then then there will be several models available
