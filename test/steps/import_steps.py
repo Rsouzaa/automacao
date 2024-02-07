@@ -33,7 +33,8 @@ try:
     # USER STEPS
 
     from test.steps.examples.web.SistemaADB360 import User_user, monitoramento_alarme, grupo_agencia, ponto_de_venda, \
-        usuario, grupo_operacao, grupo_ambiente, múltiplos_alarmes, alarmes_dasativados, feriado, regra_alarme
+        usuario, grupo_operacao, grupo_ambiente, múltiplos_alarmes, alarmes_dasativados, feriado, regra_alarme, \
+        operacao_alarme
 
 except (Exception,) as ex:
     raise ImportError(

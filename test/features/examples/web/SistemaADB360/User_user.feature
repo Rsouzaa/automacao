@@ -82,7 +82,7 @@ Feature: Profiling
 
 @operacao_alarme
   Scenario: alarm operation
-    Given
-    When
-    Then
+    Given that an alarm operation will be created
+    When the profile will use the same
+    Then the selected operation will be used
 
