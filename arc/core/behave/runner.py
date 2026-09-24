@@ -239,8 +239,8 @@ def make_behave_argv(verbose: bool = False, junit: bool = False, format_pretty: 
     if format_pretty:
         params = params + ' --format pretty'
     if tags:
-        params = ''.join(' --tags=' + ','.join(tag if isinstance(tag, list) else [tag]) for tag in
-                         (tags if isinstance(tags, list) else [tags])).replace(', ', ',')
+        params += ''.join(' --tags=' + ','.join(tag if isinstance(tag, list) else [tag]) for tag in
+                          (tags if isinstance(tags, list) else [tags])).replace(', ', ',')
     if conf_properties:
 
         if type(conf_properties) is str:
@@ -342,20 +342,32 @@ def run_sequential(args):
     return finish_code
 
 
-def main(args: object = None) -> object:
+def execute(args: str = '') -> int:
     """
-    Main function of Talos, here begins and ends the execution of the framework.
+    Run Talos without terminating the current process.
     :param args:
-    :return:
+    :return: Talos execution exit code.
     """
     logger.info('Starting TalosBDD main')
+    if args is None:
+        args = ''
+    if not isinstance(args, str):
+        raise TypeError('Talos execution arguments must be a string.')
+
     os.environ['RUN_TYPE'] = 'parallel' if '--parallel' in args or ' -x ' in args else 'sequential'
 
     before_execution()
-    if os.environ['RUN_TYPE'] == 'parallel':
-        finish_code = run_parallel(args)
-    else:
-        finish_code = run_sequential(args)
-    after_execution()
+    try:
+        if os.environ['RUN_TYPE'] == 'parallel':
+            finish_code = run_parallel(args)
+        else:
+            finish_code = run_sequential(args)
+    finally:
+        after_execution()
     logger.info(f"Finish code: {finish_code}")
-    sys.exit(finish_code)
+    return finish_code
+
+
+def main(args: str = '') -> None:
+    """Talos command-line entrypoint."""
+    sys.exit(execute(args))

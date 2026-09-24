@@ -10,7 +10,6 @@ from selenium.webdriver.remote.webelement import WebElement
 
 from arc.core.driver.driver_manager import DriverManager
 from arc.page_objects.common_object import CommonObject
-from arc.core.test_method.visual_test import VisualTest
 
 logger = logging.getLogger(__name__)
 
@@ -210,6 +209,8 @@ class PageElement(CommonObject):
         """
         if exclude_elements is None:
             exclude_elements = []
+        from arc.core.test_method.visual_test import VisualTest
+
         VisualTest(self.driver_wrapper, force).assert_screenshot(self.web_element, filename, self.__class__.__name__,
                                                                  threshold, exclude_elements)
 

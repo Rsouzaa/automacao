@@ -68,19 +68,23 @@ class InstallDriver:
 
     def _move_driver(self, driver_path):
         logger.debug(f"Moving driver into: {driver_path}")
-        shutil.move(driver_path, self.drivers_path + self.driver_name)
+        os.makedirs(self.drivers_path, exist_ok=True)
+        target_path = os.path.join(self.drivers_path, self.driver_name)
+        if os.path.exists(target_path):
+            os.remove(target_path)
+        shutil.copy2(driver_path, target_path)
 
     def _download_driver(self, driver):
         logger.debug(f"Downloading driver: {driver}")
         driver_path = ''
         if driver == constants.IEXPLORER:
-            driver_path = IEDriverManager(path=self.temp_path).install()
+            driver_path = IEDriverManager().install()
         elif driver == constants.CHROME:
-            driver_path = ChromeDriverManager(path=self.temp_path).install()
+            driver_path = ChromeDriverManager().install()
         elif driver == constants.EDGE:
-            driver_path = EdgeChromiumDriverManager(path=self.temp_path).install()
+            driver_path = EdgeChromiumDriverManager().install()
         elif driver == constants.FIREFOX:
-            driver_path = GeckoDriverManager(path=self.temp_path).install()
+            driver_path = GeckoDriverManager().install()
         logger.debug(f"Successful driver download in: {driver_path}")
         return driver_path
 

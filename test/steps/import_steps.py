@@ -31,10 +31,9 @@ try:
     from arc.contrib.steps.web import web_keywords
     from arc.contrib.steps.accessibility import accessibility_keywords
     # USER STEPS
+    from test.steps.web.controle_vendas_shopee import smoke_steps
 
-    from test.steps.examples.web.SistemaADB360 import User_user, monitoramento_alarme, grupo_agencia, ponto_de_venda, \
-        usuario, grupo_operacao, grupo_ambiente, múltiplos_alarmes, alarmes_dasativados, feriado, regra_alarme, \
-        operacao_alarme
+    from test.steps.examples.web.SistemaMAAT import usuario, User_user
 
 except (Exception,) as ex:
     raise ImportError(

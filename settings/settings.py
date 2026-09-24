@@ -23,16 +23,16 @@ LOCALE_PATH = os.path.join(BASE_PATH, 'arc/settings/locale')
 
 # PROJECT INFO IS REQUIRED. PLEASE COMPLETE THESE FIELDS WITH THE PROJECT INFORMATION
 PROJECT_INFO = {
-    'application': 'ADB',  # application being tested
-    'business_area': 'Institucional & Serviços Internos.',  # application business area
-    'entity': 'Santander',  # your department
-    'user_code': 'T785543'  # your LDAP-ID
+    'application': 'MAAT',  # application being tested
+    'business_area': 'Qualidade e Automação de sistemas.',  # application business area
+    'entity': 'Maat Qualidade',  # your department
+    'user_code': 'Roberto Souza'  # your LDAP-ID
 }
 
 # Proxy configuration
 PROXY = {
-    'http_proxy': 'http://sbri1zb1gvml-adbbrs-004/login/user',
-    'https_proxy': 'http://sbri1zb1gvml-adbbrs-004/login/user'
+    'http_proxy': 'https://hk.maatgestao.com.br/auth/login',
+    'https_proxy': 'https://hk.maatgestao.com.br/auth/login'
 }
 
 # Project and general configuration
@@ -98,7 +98,7 @@ PYTALOS_REPORTS = {
     'delete_old_reports': True,  # deletes the reports generated in the previous run
     'save_old_reports': {  # generates a compressed file with the contents of the output folder
         'enabled': False,
-        'output_path': 'C:\\Users\\T785543\\Roberto Souza\\talos\\python-talos-talos-bdd-2.2.0\\reports\\',  # absolute path
+        'output_path': 'C:\\Users\\rober\\talos-app\\talos-automacao\\output\\reports',  # absolute path
         'format': 'zip'  # zip, tar, bztar or gztar
     },
     'include_sub_steps_in_results': False,

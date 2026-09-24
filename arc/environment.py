@@ -408,8 +408,15 @@ def after_execution():
     logger.info("Generating reports...")
     print(Fore.YELLOW + "Generating reports...")
 
-    with open(f"{BASE_DIR}/output/reports/talos_report.json", encoding='utf-8') as json_file:
-        logger.debug(f"Loading talos json report from: {BASE_DIR}/output/reports/talos_report.json")
+    report_path = f"{BASE_DIR}/output/reports/talos_report.json"
+    if not os.path.isfile(report_path):
+        logger.warning("Skipping report generation because no Talos JSON report was created.")
+        print(Fore.YELLOW + "Skipping report generation: talos_report.json was not created.")
+        utils_after_execution()
+        return
+
+    with open(report_path, encoding='utf-8') as json_file:
+        logger.debug(f"Loading talos json report from: {report_path}")
         json_data = prepare_json_data(json.load(json_file))
 
     run_hooks(context=None, moment='before_reports', extra_info=json_data)

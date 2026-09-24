@@ -8,6 +8,7 @@ import os
 import sys
 import shutil
 import requests
+from pathlib import Path
 
 from rich import print
 from rich.table import Table
@@ -15,6 +16,9 @@ from zipfile import ZipFile
 from arc.core.behave.env_utils import _generate_html_reports, prepare_json_data  # noqa
 from arc.core.test_method.exceptions import TalosReportException
 from arc.reports.pdf.create_report import CreatePDF
+from arc.contrib.tools.web_template import create_web_template
+from arc.contrib.tools.system_catalog import register_system
+from arc.contrib.tools.api_template import create_api_template
 from settings import settings
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from subprocess import call
@@ -26,8 +30,6 @@ try:
     from arc.integrations.alm import alm3_properties
 except (Exception,):
     print('[bold red]Error![/bold red] arc folder does not exist, update core to restore it!')
-
-requests.packages.urllib3.disable_warnings()  # noqa
 
 BASE_PATH = settings.BASE_PATH
 OUTPUT_PATH = os.path.join(BASE_PATH, "output")
@@ -66,11 +68,9 @@ def update_core(token: str = typer.Option(...), version: str = typer.Option(None
     def github_request():
         print('[bold blue]Info![/bold blue] Making request to Github.')
         headers = {'Authorization': 'token ' + token}
-        response = requests.get(url, verify=False, headers=headers, stream=True)
+        response = requests.get(url, headers=headers, stream=True, timeout=(10, 60))
+        response.raise_for_status()
         print('[bold blue]Info![/bold blue] Request made successfully.')
-        if not response:
-            print('[bold red]Error![/bold red] Invalid token.')
-            sys.exit()
         progress1.update(task1, advance=20)
         return response
 
@@ -84,25 +84,37 @@ def update_core(token: str = typer.Option(...), version: str = typer.Option(None
     def extract_zip():
         print("[bold blue]Info![/bold blue] Extracting zip file.")
         with ZipFile(ZIP_PATH, "r") as zip_ref:
+            temp_directory = Path(TEMP_PATH).resolve()
+            for member in zip_ref.infolist():
+                member_path = (temp_directory / member.filename).resolve()
+                if temp_directory not in member_path.parents and member_path != temp_directory:
+                    raise ValueError(f"Invalid archive path: {member.filename}")
             zip_ref.extractall(TEMP_PATH)
         print("[bold blue]Info![/bold blue] Zip file has been extracted.")
         progress1.update(task1, advance=20)
 
     def move_download_files():
-        unzip_path = os.path.join(TEMP_PATH, [element for element in os.listdir(TEMP_PATH) if ".zip" not in element][0])
+        directories = [path for path in Path(TEMP_PATH).iterdir() if path.is_dir()]
+        if len(directories) != 1:
+            raise ValueError('The downloaded archive must contain a single root directory.')
+        unzip_path = directories[0]
         files_to_move = ["changelog.md", "README.md", "requirements.txt", "VERSION", ".gitignore"]
         directories_to_move = ["arc"]
         for file in files_to_move:
             print(f"[bold blue]Info![/bold blue] Moving the file: {file}.")
-            shutil.copyfile(os.path.join(unzip_path, file), os.path.join(BASE_PATH, file))
+            shutil.copyfile(unzip_path / file, Path(BASE_PATH) / file)
         for directory in directories_to_move:
             print(f"[bold blue]Info![/bold blue] Moving the files from the {directory} folder.")
-            if os.path.exists(os.path.join(BASE_PATH, directory)):
-                os.renames(directory, f"_{directory}")
-                shutil.move(os.path.join(unzip_path, directory), os.path.join(BASE_PATH, directory))
-                shutil.rmtree(f"_{directory}", ignore_errors=True)
+            target = Path(BASE_PATH) / directory
+            backup = Path(BASE_PATH) / f".{directory}.backup"
+            if target.exists():
+                if backup.exists():
+                    shutil.rmtree(backup)
+                target.replace(backup)
+                shutil.move(str(unzip_path / directory), str(target))
+                shutil.rmtree(backup, ignore_errors=True)
             else:
-                shutil.move(os.path.join(unzip_path, directory), os.path.join(BASE_PATH, directory))
+                shutil.move(str(unzip_path / directory), str(target))
         progress1.update(task1, advance=10)
 
     with Progress(
@@ -116,10 +128,12 @@ def update_core(token: str = typer.Option(...), version: str = typer.Option(None
     with Progress() as progress1:
         task1 = progress1.add_task("[cyan]Updating...", total=100)
         create_temp_folder()
-        download_zip(github_request())
-        extract_zip()
-        move_download_files()
-        delete_temp_folder()
+        try:
+            download_zip(github_request())
+            extract_zip()
+            move_download_files()
+        finally:
+            delete_temp_folder()
 
 
 @app.command()
@@ -244,6 +258,54 @@ def create_evidence(report_type: str = typer.Option(None)):
             '[bold red]Error![/bold red] Reports cannot be created because the file talos_report.json does not exist')
 
 
+@app.command('create-web-template')
+def create_web_template_command(
+        system_name: str = typer.Option(..., help='Name of the system to automate.'),
+        project_root: str = typer.Option('.', help='Root directory of the AutomacaoBDD project.'),
+):
+    """Create the initial files required for a new Web automation."""
+    try:
+        result = create_web_template(system_name, Path(project_root))
+    except (FileExistsError, FileNotFoundError, ValueError) as error:
+        raise typer.BadParameter(str(error)) from error
+
+    print(f"[bold green]Success![/bold green] Template created for {system_name}.")
+    print(f"[bold blue]Info![/bold blue] Configure selectors in {result['page_object_directory']}.")
+    print('[bold blue]Info![/bold blue] Set the generated username and password environment variables before running.')
+
+
+@app.command('create-api-template')
+def create_api_template_command(
+        system_name: str = typer.Option(..., help='Name of the API to automate.'),
+        project_root: str = typer.Option('.', help='Root directory of the AutomacaoBDD project.'),
+):
+    """Create the initial files required for a REST API automation."""
+    try:
+        result = create_api_template(system_name, Path(project_root))
+    except (FileExistsError, FileNotFoundError, ValueError) as error:
+        raise typer.BadParameter(str(error)) from error
+
+    print(f"[bold green]Success![/bold green] API template created for {system_name}.")
+    print(f"[bold blue]Info![/bold blue] Configure the endpoint in {result['profiles']}.")
+
+
+@app.command('register-system')
+def register_system_command(
+        system_name: str = typer.Option(..., help='Name of the system to automate.'),
+        system_type: str = typer.Option('web', help='System type: web or api.'),
+        auth_type: str = typer.Option('password', help='Authentication: password, sso or mfa.'),
+        project_root: str = typer.Option('.', help='Root directory of the AutomacaoBDD project.'),
+):
+    """Register a system for automation without storing credentials."""
+    try:
+        system = register_system(system_name, system_type, auth_type, Path(project_root))
+    except (FileExistsError, ValueError) as error:
+        raise typer.BadParameter(str(error)) from error
+
+    print(f"[bold green]Success![/bold green] System '{system['name']}' registered.")
+    print(f"[bold blue]Info![/bold blue] Credential prefix: {system['credential_environment_prefix']}.")
+
+
 def generate_document_reports(report_type, json_data):
     """
         This function generates the doc reports.
@@ -319,17 +381,10 @@ def generate_html_reports(json_data):
 @app.callback()
 def callback():
     print(
-        "[red]\n==============================================================================================\n"
-        "==============================================================================================\n"
-        "==         ___________      .__               __________________  ________                  ==\n"
-        "==         \__    ___/____  |  |   ____  _____\______   \______ \ \______ \                 ==\n"
-        "==           |    |  \__  \ |  |  /  _ \/  ___/|    |  _/|    |  \ |    |  \                ==\n"
-        "==           |    |   / __ \|  |_(  <_> )___ \ |    |   \|    `   \|    `   \               ==\n"
-        "==           |____|  (____  /____/\____/____  >|______  /_______  /_______  /               ==\n"
-        "==                        \/                \/        \/        \/        \/                ==\n"
-        "==============================================================================================\n"
-        "=========================== Talos - CoE Testing Automation - SGTO ============================\n"
-        "==============================================================================================\n")
+        "[red]\n==============================================================================\n"
+        "==                          AUTOMACAO BDD                                  ==\n"
+        "==                          AutomacaoBDD - SGTO                            ==\n"
+        "==============================================================================\n")
 
 
 if __name__ == "__main__":

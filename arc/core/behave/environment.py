@@ -39,7 +39,10 @@ def before_all(context):
     """
     Functions that are executed before anything of the tests.
     """
-    install_pytest_asserts()
+    try:
+        install_pytest_asserts()
+    except (AttributeError, ImportError) as error:
+        logger.warning("Pytest assertion integration is unavailable: %s", error)
     utils_before_all(context)
     logger.debug(f"The core before all actions have been executed correctly")
 
