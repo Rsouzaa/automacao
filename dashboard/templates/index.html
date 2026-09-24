@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AutomacaoBDD | Resultados</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body class="is-loading">
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow brand-mark">AUTOMACAO BDD <span>TEST INTELLIGENCE</span></p>
+        <h1>Resultados de testes</h1>
+        <p id="run-meta" class="muted">Carregando ultimo relatorio...</p>
+      </div>
+      <div class="header-actions">
+        <a class="export-button pdf" href="/api/export/pdf">PDF</a>
+        <a class="export-button xlsx" href="/api/export/xlsx">XLSX</a>
+        <button id="refresh" class="icon-button" type="button" title="Atualizar resultados">
+          <span class="button-loader" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="button-label">Atualizar</span>
+        </button>
+      </div>
+    </header>
+
+    <section class="run-banner" aria-label="Estado da execucao">
+      <div class="run-status">
+        <span id="run-status-dot" class="status-orb"></span>
+        <div>
+          <p class="eyebrow">STATUS DA EXECUCAO</p>
+          <h2 id="run-status">Sincronizando suite</h2>
+          <p id="run-status-caption" class="muted">Preparando o panorama da ultima execucao.</p>
+        </div>
+      </div>
+      <div class="run-facts">
+        <div><span>AMBIENTE</span><strong id="run-environment">-</strong></div>
+        <div><span>VELOCIDADE</span><strong id="run-velocity">-</strong></div>
+        <div><span>VERSAO</span><strong id="run-version">-</strong></div>
+      </div>
+    </section>
+
+    <section id="summary" class="metrics" aria-label="Resumo da execucao"></section>
+
+    <section class="intelligence" aria-label="Analise da execucao">
+      <article class="quality-card">
+        <div class="card-heading"><div><p class="eyebrow">QUALIDADE</p><h2>Taxa de aprovacao</h2></div><strong id="pass-rate">0%</strong></div>
+        <div class="progress-track"><span id="pass-rate-bar"></span></div>
+        <p id="quality-caption" class="muted"></p>
+      </article>
+      <article class="distribution-card">
+        <p class="eyebrow">DISTRIBUICAO DE STEPS</p>
+        <h2>Resultado por execucao</h2>
+        <div id="step-distribution" class="distribution"></div>
+      </article>
+      <article class="slow-card">
+        <p class="eyebrow">DESEMPENHO</p>
+        <h2>Cenario mais lento</h2>
+        <strong id="slowest-name">Sem dados</strong>
+        <p id="slowest-meta" class="muted"></p>
+      </article>
+    </section>
+
+    <section id="failure-area" class="failure-area" aria-label="Falhas que precisam de analise"></section>
+
+    <section class="workspace">
+      <div class="runs-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">EXECUCAO</p>
+            <h2>Features e cenarios</h2>
+          </div>
+          <div class="filters" role="group" aria-label="Filtrar por status">
+            <button class="filter is-active" data-status="all" type="button">Todos</button>
+            <button class="filter" data-status="passed" type="button">Passou</button>
+            <button class="filter" data-status="failed" type="button">Erro</button>
+          </div>
+        </div>
+        <div id="feature-list" class="feature-list"></div>
+      </div>
+
+      <aside class="detail-panel" aria-live="polite">
+        <p class="eyebrow">DETALHES</p>
+        <div id="detail-content" class="empty-detail">
+          <h2>Selecione um cenario</h2>
+          <p>Os steps, duracoes, evidencias e falhas aparecerao aqui.</p>
+        </div>
+      </aside>
+    </section>
+
+    <div id="loading-state" class="loading-state" role="status" aria-live="polite" aria-label="Carregando resultados">
+      <div class="report-loader" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div><p class="eyebrow">SINCRONIZANDO</p><strong id="loading-label">Lendo o ultimo relatorio</strong></div>
+    </div>
+  </main>
+  <template id="metric-template">
+    <article class="metric"><p></p><strong></strong><span></span></article>
+  </template>
+  <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>
