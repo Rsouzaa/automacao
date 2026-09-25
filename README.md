@@ -1,5 +1,40 @@
 # ![Talos-Logo](arc/documentation/taloslogoreadme.png) TALOS BDD Automation Framework
 
+## Testar uma URL no Windows
+
+Abra PowerShell na pasta do projeto, instale Python 3.12 e Chrome e execute:
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m dashboard.app
+```
+
+Abra `http://127.0.0.1:5050/`, informe a URL
+`https://controle-vendas-shopee.rsouzafrancisco82.chatgpt.site/`, selecione
+**Todas as abas** ou uma aba e clique em **Executar testes**. Use **Mostrar
+Chrome** para acompanhar a navegação. Os cenários verificam títulos visíveis
+de Painel, Vendas, Estoque e Investimentos, sem cadastrar, alterar ou excluir
+dados reais. Relatórios dependem da execução real; nenhum resultado é gerado
+como demonstração.
+
+O painel Flask local usa o mesmo visual da prévia publicada no Work; os controles
+de execução BDD aparecem somente na versão local. Se você substituir um pacote
+anterior, encerre o servidor com `Ctrl+C`, extraia este ZIP em uma pasta nova e
+recarregue o navegador com `Ctrl+F5` após reiniciar o servidor.
+
+Também é possível executar sem o painel:
+
+```powershell
+$env:AUTOMACAO_TARGET_URL = 'https://controle-vendas-shopee.rsouzafrancisco82.chatgpt.site/'
+.\.venv\Scripts\python.exe talos_run.py --tags @shopee_pages -D Config_environment=chrome-ci --no-alm
+```
+
+Use `@shopee_panel`, `@shopee_sales`, `@shopee_stock` ou
+`@shopee_investments` para escolher só uma aba. O teste das abas não valida
+cálculos, criação de registros ou regras de negócio. Em ambientes que pedem
+login, configure antes uma conta dedicada a testes.
+
 > A framework developed and supported by the ***Testing Automation CoE - Automation Toolkit***
 
 **TALOSBDD** is a [Python](https://devdocs.io/python~3.6/) test automation framework based on the BDD development

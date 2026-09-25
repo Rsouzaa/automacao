@@ -3,6 +3,7 @@
 File of configuration and implementation of the template variables.
 """
 import logging
+import os
 import re
 from copy import deepcopy
 from colorama import Fore
@@ -105,6 +106,9 @@ def get_value_from_profiles(template_var):
     :return:
     """
     template_var = template_var.strip()
+    if template_var.endswith(':web') and os.environ.get('AUTOMACAO_TARGET_URL'):
+        from target_validation import validate_target_url
+        return validate_target_url(os.environ['AUTOMACAO_TARGET_URL'])
     list_files = template_var_dict['profiles']
     if ':' in template_var:
         aux = template_var.split(':')

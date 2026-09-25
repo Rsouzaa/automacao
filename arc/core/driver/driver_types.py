@@ -185,8 +185,12 @@ class DriverTypes:
         if settings_driver.PYTALOS_GENERAL['update_driver']['enabled_update']:
             install_driver = InstallDriver(chrome_driver)
             install_driver.install_driver(constants.CHROME)
-        return webdriver.Chrome(
-            executable_path=chrome_path,
-            chrome_options=create_chrome_options(self.base_config),
-            desired_capabilities=capabilities
-        )
+        options = create_chrome_options(self.base_config)
+        for key, value in capabilities.items():
+            if key == 'acceptSslCerts':
+                options.accept_insecure_certs = bool(value)
+                continue
+            if key not in ('browserName', 'browserVersion', 'platformName'):
+                options.set_capability(key, value)
+        # Selenium Manager finds the matching driver on both Windows and Linux.
+        return webdriver.Chrome(options=options)

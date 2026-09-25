@@ -3,34 +3,72 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AutomacaoBDD | Resultados</title>
+  <title>AutomacaoBDD | Painel de testes</title>
+  <meta name="theme-color" content="#101c2c">
+  <meta name="description" content="Painel de verificações e resultados reais de testes do AutomacaoBDD.">
   <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
 </head>
 <body class="is-loading">
   <main class="shell">
     <header class="topbar">
       <div>
-        <p class="eyebrow brand-mark">AUTOMACAO BDD <span>TEST INTELLIGENCE</span></p>
-        <h1>Resultados de testes</h1>
-        <p id="run-meta" class="muted">Carregando ultimo relatorio...</p>
+        <p class="eyebrow brand-mark"><span class="bb8-logo" aria-hidden="true"><span class="bb8-logo__antenna"></span><span class="bb8-logo__head"><span class="bb8-logo__eye"></span></span><span class="bb8-logo__body"><span class="bb8-logo__disc"></span></span><span class="bb8-logo__shadow"></span></span> AUTOMAÇÃO BDD <span class="brand-divider" aria-hidden="true"></span> <span class="brand-subtitle">PAINEL DE TESTES</span></p>
+        <h1>Verifique sua aplicação<br><span>com dados reais.</span></h1>
+        <p id="report-notice" class="preview-notice">AGUARDANDO EXECUÇÃO REAL</p>
+        <p id="run-meta" class="muted">Verificando resultados...</p>
       </div>
       <div class="header-actions">
-        <a class="export-button pdf" href="/api/export/pdf">PDF</a>
-        <a class="export-button xlsx" href="/api/export/xlsx">XLSX</a>
-        <button id="refresh" class="icon-button" type="button" title="Atualizar resultados">
+        <a class="export-button pdf" href="/api/export/pdf" hidden>PDF</a>
+        <a class="export-button xlsx" href="/api/export/xlsx" hidden>XLSX</a>
+        <button id="refresh" class="icon-button" type="button" title="Recarregar painel">
           <span class="button-loader" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="button-label">Atualizar</span>
+          <span class="button-label">Recarregar painel</span>
         </button>
       </div>
     </header>
+
+    <section class="target-panel" aria-labelledby="target-title">
+      <div class="target-heading">
+        <div>
+          <p class="eyebrow">01 / TESTE LOCAL</p>
+          <h2 id="target-title">Por onde começamos?</h2>
+          <p class="muted">Cole a URL e selecione uma verificação ou as abas do Controle Vendas Shopee. Os cenários de abas apenas leem a página.</p>
+        </div>
+        <span class="target-mode">Somente neste computador</span>
+      </div>
+      <form id="run-form" class="target-form">
+        <label for="target-url">Endereço completo</label>
+        <div class="target-controls">
+          <input id="target-url" type="url" inputmode="url" placeholder="https://seu-sistema.com.br/" autocomplete="url" required>
+          <button id="run-button" type="submit">Executar testes</button>
+        </div>
+        <div class="runner-options">
+          <label for="test-suite">O que testar</label>
+          <select id="test-suite">
+            <option value="url_smoke">Verificação inicial da URL</option>
+            <option value="shopee_pages">Todas as abas (4 cenários)</option>
+            <option value="shopee_panel">Painel</option>
+            <option value="shopee_sales">Vendas</option>
+            <option value="shopee_stock">Estoque</option>
+            <option value="shopee_investments">Investimentos</option>
+          </select>
+          <label for="expected-text">Texto esperado na página <span>(apenas verificação inicial, opcional)</span></label>
+          <input id="expected-text" type="text" maxlength="120" placeholder="Ex.: Seu negócio em números">
+          <label class="runner-checkbox" for="show-browser"><input id="show-browser" type="checkbox"> Mostrar Chrome durante o teste</label>
+        </div>
+        <p id="run-message" class="target-message" role="status" aria-live="polite">Nenhum teste iniciado neste painel.</p>
+        <pre id="run-log" class="run-log" hidden></pre>
+      </form>
+    </section>
 
     <section class="run-banner" aria-label="Estado da execucao">
       <div class="run-status">
         <span id="run-status-dot" class="status-orb"></span>
         <div>
-          <p class="eyebrow">STATUS DA EXECUCAO</p>
-          <h2 id="run-status">Sincronizando suite</h2>
-          <p id="run-status-caption" class="muted">Preparando o panorama da ultima execucao.</p>
+          <p class="eyebrow">02 / RESULTADOS DA SUÍTE</p>
+          <h2 id="run-status">Aguardando execução</h2>
+          <p id="run-status-caption" class="muted">Ainda não há resultados reais para este painel.</p>
         </div>
       </div>
       <div class="run-facts">
@@ -44,7 +82,7 @@
 
     <section class="intelligence" aria-label="Analise da execucao">
       <article class="quality-card">
-        <div class="card-heading"><div><p class="eyebrow">QUALIDADE</p><h2>Taxa de aprovacao</h2></div><strong id="pass-rate">0%</strong></div>
+        <div class="card-heading"><div><p class="eyebrow">QUALIDADE</p><h2>Taxa de aprovacao</h2></div><strong id="pass-rate">—</strong></div>
         <div class="progress-track"><span id="pass-rate-bar"></span></div>
         <p id="quality-caption" class="muted"></p>
       </article>
@@ -67,7 +105,7 @@
       <div class="runs-panel">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">EXECUCAO</p>
+            <p class="eyebrow">03 / CENÁRIOS</p>
             <h2>Features e cenarios</h2>
           </div>
           <div class="filters" role="group" aria-label="Filtrar por status">
@@ -90,7 +128,7 @@
 
     <div id="loading-state" class="loading-state" role="status" aria-live="polite" aria-label="Carregando resultados">
       <div class="report-loader" aria-hidden="true"><i></i><i></i><i></i></div>
-      <div><p class="eyebrow">SINCRONIZANDO</p><strong id="loading-label">Lendo o ultimo relatorio</strong></div>
+      <div><p class="eyebrow">VERIFICANDO</p><strong id="loading-label">Verificando resultados</strong></div>
     </div>
   </main>
   <template id="metric-template">

@@ -1,5 +1,6 @@
 
 selenium==4.9.1
+setuptools>=70,<81
 junit2html==30.1.3
 requests==2.*
 behave==1.2.6
@@ -7,7 +8,7 @@ pytest>=7.4,<9
 jsonschema==4.5.1
 oauthlib==3.2.0
 requests-oauthlib==1.3.1
-PyYAML==6.0
+PyYAML>=6.0.2,<7
 beautifulsoup4==4.11.1
 Appium-Python-Client==2.*
 python-docx==0.8.11
@@ -21,7 +22,7 @@ webdriver-manager>=4,<5
 pycryptodome==3.14.1
 typer==0.7.0
 rich==13.3.1
-reportlab==3.6.12
+reportlab>=4,<5
 Jinja2 == 3.1.2
 Babel == 2.12.1
 six~=1.16.0
@@ -33,7 +34,7 @@ Flask>=3.0,<4
 # Faker==13.12.0
 # PyMuPDF==1.21.0 #fitz
 # PyJWT
-pywin32>=303,<306
+pywin32>=306,<313; sys_platform == 'win32'
 # cx_Oracle==8.3.0
 # psycopg2
 # mysql-connector

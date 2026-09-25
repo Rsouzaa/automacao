@@ -363,7 +363,9 @@ def execute(args: str = '') -> int:
         else:
             finish_code = run_sequential(args)
     finally:
-        after_execution()
+        # A dry run has no execution timestamps or actual results to render.
+        if '--dry-run' not in args:
+            after_execution()
     logger.info(f"Finish code: {finish_code}")
     return finish_code
 

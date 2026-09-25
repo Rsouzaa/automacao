@@ -3,7 +3,7 @@ const state = { report: null, filter: 'all', selectedScenario: null };
 const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
 const duration = (value) => `${Number(value || 0).toFixed(2)}s`;
 
-function setLoading(isLoading, label = 'Lendo o ultimo relatorio') {
+function setLoading(isLoading, label = 'Verificando resultados') {
   document.body.classList.toggle('is-loading', isLoading);
   document.querySelector('#refresh').disabled = isLoading;
   document.querySelector('#loading-label').textContent = label;
@@ -46,6 +46,16 @@ function renderRunOverview(report) {
 
 function renderIntelligence(report) {
   const { analytics, summary, failures } = report;
+  if (!summary.scenarios) {
+    document.querySelector('#pass-rate').textContent = '—';
+    document.querySelector('#pass-rate-bar').style.width = '0%';
+    document.querySelector('#quality-caption').textContent = 'Aguardando resultados reais.';
+    document.querySelector('#step-distribution').textContent = 'Nenhum step executado.';
+    document.querySelector('#slowest-name').textContent = 'Sem dados';
+    document.querySelector('#slowest-meta').textContent = 'Aguardando execução.';
+    document.querySelector('#failure-area').innerHTML = '<div class="empty-strip"><strong>Nenhum teste executado</strong><span>As falhas serão exibidas após uma execução real.</span></div>';
+    return;
+  }
   const rate = analytics.pass_rate;
   document.querySelector('#pass-rate').textContent = `${rate}%`;
   document.querySelector('#pass-rate-bar').style.width = `${rate}%`;
@@ -89,7 +99,7 @@ function renderFeatures(features) {
   const visibleFeatures = features.map((feature) => ({ ...feature, scenarios: feature.scenarios.filter((scenario) => state.filter === 'all' || scenario.status === state.filter) })).filter((feature) => feature.scenarios.length);
   const target = document.querySelector('#feature-list');
   target.replaceChildren();
-  if (!visibleFeatures.length) { target.innerHTML = '<p class="no-results">Nenhum cenario corresponde ao filtro.</p>'; return; }
+  if (!visibleFeatures.length) { target.innerHTML = `<p class="no-results">${features.length ? 'Nenhum cenário corresponde ao filtro.' : 'Nenhum cenário executado nesta aplicação.'}</p>`; return; }
   visibleFeatures.forEach((feature) => {
     const featureElement = document.createElement('article');
     featureElement.className = `feature ${feature.status}`;
@@ -113,12 +123,14 @@ function renderFeatures(features) {
 }
 
 async function loadDashboard() {
-  setLoading(true, state.report ? 'Atualizando resultados' : 'Lendo o ultimo relatorio');
+  setLoading(true, 'Verificando resultados');
   try {
     const response = await fetch('/api/report', { cache: 'no-store' });
     if (!response.ok) throw new Error(`Resposta ${response.status}`);
     state.report = await response.json();
     const { meta, summary, features, message } = state.report;
+    document.querySelector('#report-notice').hidden = summary.scenarios > 0;
+    document.querySelectorAll('.export-button').forEach((link) => { link.hidden = !summary.scenarios; });
     document.querySelector('#run-meta').textContent = message || `${meta.application || 'AutomacaoBDD'} | ${meta.environment || 'ambiente nao informado'} | ${meta.date || 'sem data'} | ${duration(meta.duration)}`;
     renderRunOverview(state.report);
     renderSummary(summary);
@@ -126,15 +138,83 @@ async function loadDashboard() {
     renderFeatures(features);
   } catch (error) {
     document.querySelector('#run-meta').textContent = `Erro ao carregar relatorio: ${error.message}`;
+    document.querySelectorAll('.export-button').forEach((link) => { link.hidden = true; });
   } finally {
     setLoading(false);
   }
 }
 
 document.querySelector('#refresh').addEventListener('click', loadDashboard);
+
+const runForm = document.querySelector('#run-form');
+const targetInput = document.querySelector('#target-url');
+const runButton = document.querySelector('#run-button');
+const runMessage = document.querySelector('#run-message');
+const runLog = document.querySelector('#run-log');
+let lastFinishedRun = null;
+let pollTimer;
+try { targetInput.value = localStorage.getItem('automacaobdd:local-target') || ''; } catch (_) { /* Optional. */ }
+
+function showRunState(result) {
+  runButton.disabled = result.status === 'running';
+  runButton.textContent = result.status === 'running' ? 'Executando…' : 'Executar testes';
+  runMessage.textContent = result.message || 'Aguardando execução.';
+  runMessage.className = `target-message run-state-${result.status}`;
+  runLog.hidden = !result.log_tail;
+  runLog.textContent = result.log_tail || '';
+  if (result.status === 'running') {
+    clearTimeout(pollTimer);
+    pollTimer = setTimeout(refreshRunStatus, 1800);
+  } else if (result.run_id && lastFinishedRun !== result.run_id) {
+    lastFinishedRun = result.run_id;
+    loadDashboard();
+  }
+}
+
+async function refreshRunStatus() {
+  try {
+    const response = await fetch('/api/run', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    showRunState(await response.json());
+  } catch (error) {
+    runMessage.textContent = `Não foi possível consultar o andamento: ${error.message}`;
+    runMessage.className = 'target-message error';
+    runButton.disabled = false;
+  }
+}
+
+runForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  clearTimeout(pollTimer);
+  runButton.disabled = true;
+  runMessage.textContent = 'Iniciando o teste…';
+  runMessage.className = 'target-message';
+  runLog.hidden = true;
+  try {
+    const url = targetInput.value.trim();
+    const response = await fetch('/api/run', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        url, suite: document.querySelector('#test-suite').value,
+        expected_text: document.querySelector('#expected-text').value,
+        show_browser: document.querySelector('#show-browser').checked,
+      }),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || `HTTP ${response.status}`);
+    try { localStorage.setItem('automacaobdd:local-target', url); } catch (_) { /* Optional. */ }
+    showRunState(result);
+  } catch (error) {
+    runButton.disabled = false;
+    runMessage.textContent = `Não foi possível iniciar: ${error.message}`;
+    runMessage.className = 'target-message error';
+  }
+});
+refreshRunStatus();
+
 document.querySelectorAll('.filter').forEach((button) => button.addEventListener('click', () => {
   state.filter = button.dataset.status;
   document.querySelectorAll('.filter').forEach((item) => item.classList.toggle('is-active', item === button));
-  renderFeatures(state.report.features);
+  if (state.report) renderFeatures(state.report.features);
 }));
 loadDashboard();

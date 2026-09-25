@@ -18,7 +18,7 @@ from colorama import Fore
 from settings import settings
 from arc.core.behave.template_var import replace_template_var
 
-from urllib3.packages import six  # noqa
+import six  # noqa
 import logging
 
 logger = logging.getLogger(__name__)
@@ -71,7 +71,7 @@ def _get_expected_result(step):
     """
     Return expected result parsed.
     """
-    if step.result_expected:
+    if getattr(step, 'result_expected', None):
         expected_result = str(step.result_expected)
     else:
         expected_result = str(replace_template_var(step.name))
